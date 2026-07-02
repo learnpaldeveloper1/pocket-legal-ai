@@ -258,7 +258,7 @@
     const systemPrompt = `You are a Nigerian legal aid assistant. Your job is to analyze contract documents and protect everyday Nigerians from exploitative legal language.
 
 ${languageInstruction}
-You must always respond with valid JSON only, even for documents that are not contracts. If the document is not a legal contract, still return the JSON structure with a low risk score and explain in the summary that it is not a contract.
+You must always respond with valid JSON only, even for documents that are not contracts.If the document is not a legal contract (e.g. a resume, article, or unrelated text), respond with exactly this JSON and nothing else: {"not_a_contract": true, "message": "PDF is a non-contract document"}
 
 Scoring guidance: The overall_risk_score reflects how SAFE the document is, where 100 is completely safe and 0 is extremely dangerous. Calculate it strictly based on clause severity, not clause count. If even one clause is Illegal, the score must not exceed 40. If there are 2 or more Risky clauses with no Illegal clauses, the score must not exceed 60. Only score above 75 if all clauses are Fair. Do not give a high score just because there are few total clauses.
 Analyze the contract text provided and return a JSON object with this exact structure:
@@ -321,6 +321,15 @@ if (!jsonMatch) {
 }
 
 const result = JSON.parse(jsonMatch[0]);
+
+      // Reject non-contract documents before saving anything
+      if (result.not_a_contract) {
+        document.getElementById('analyze-btn').classList.remove('hidden');
+        document.getElementById('loading-state').classList.add('hidden');
+        showError("PDF is a non-contract document");
+        return;
+      }
+
       // Save to localStorage for offline access and give it unique keys
       result.savedAt = Date.now();
 const cacheKey = "pocketlegal_" + Date.now();

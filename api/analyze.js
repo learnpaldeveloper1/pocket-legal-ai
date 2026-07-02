@@ -11,12 +11,12 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const response = await fetch(process.env.OPENROUTER_API_URL || 'https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-        'HTTP-Referer': 'https://pocket-legal-ai.vercel.app',
+        'HTTP-Referer': process.env.NODE_ENV === 'production' ? 'https://pocket-legal-ai.vercel.app' : 'http://localhost:3000',
         'X-Title': 'Pocket Legal AI'
       },
       body: JSON.stringify(req.body)
