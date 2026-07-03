@@ -9,13 +9,13 @@ Built for BuildVerse Hackathon Edition 1 (The John Amhanesi Foundation) — Focu
 
 ## The Problem
 
-Millions of Nigerians sign contracts they don't fully understand — tenancy agreements, employment letters, business proposals — without access to a lawyer. Clauses that are illegal under Nigerian law (self-help eviction, arbitrary deposit forfeiture, waived notice periods) are common and routinely go unchallenged, simply because the person signing has no way to know their rights.
+Millions of Nigerians sign contracts they don't fully understand such as without agreements, employment letters, business proposals without access to a lawyer. Clauses that are illegal under Nigerian law (self-help eviction, arbitrary deposit forfeiture, waived notice periods) are common and routinely go unchallenged, simply because the person signing has no understanding of the document.
 
 Legal aid exists in Nigeria, but it is slow, geographically limited, and often out of reach for someone who needs an answer *before* they sign something today.
 
 ## The Solution
 
-Pocket Legal AI lets anyone — a tenant, an employee, or a small business owner — paste or upload a contract (PDF or text) and get back, in under a minute:
+Pocket Legal AI lets anyone a tenant, an employee, or a small business owner — paste or upload a contract (PDF or text) and get an explanation and risk score in under a minute:
 
 - A clause-by-clause breakdown flagged **Fair**, **Risky**, or **Illegal**
 - Plain-English *and* Nigerian Pidgin explanations of what each clause actually means
@@ -28,13 +28,13 @@ Pocket Legal AI lets anyone — a tenant, an employee, or a small business owner
 
 ## Who it's for
 
-Built for everyday Nigerians navigating housing and employment contracts — but tested and working equally well for small business owners reviewing vendor agreements, freelance contracts, and partnership proposals. The tool doesn't assume who you are; it responds to what kind of legal risk is actually in the document.
+Built for everyday Nigerians navigating housing and employment contracts but tested and working equally well for small business owners reviewing vendor agreements, freelance contracts, and partnership proposals. The tool doesn't assume who you are; it responds to what kind of legal risk is actually in the document.
 
 ## Why AI, and what we learned building it
 
 We deliberately did **not** build this as a chatbot wrapper. Key design decisions:
 
-- **Citation hallucination is a real, documented risk in legal AI** — we hit it directly during development, when the model repeatedly cited a non-existent "Nigerian Contract Act." Rather than trust prompt instructions alone to fix this, we added a **code-level whitelist** that validates every citation against a small set of real, verifiable Nigerian statutes before it's shown to the user. If the model cites anything outside that list, the app shows an honest "no specific statute applies — consult a lawyer" message instead of a fabricated law. This was a deliberate trade-off: full RAG (retrieval over the actual statute text) would be the more robust long-term fix, but the whitelist gets most of the safety benefit at a fraction of the engineering cost, appropriate for a hackathon timeline.
+- **Citation hallucination is a real, documented risk in legal AI** , we hit it directly during development, when the model repeatedly cited a non-existent "Nigerian Contract Act." Rather than trust prompt instructions alone to fix this, we added a **code-level whitelist** that validates every citation against a small set of real, verifiable Nigerian statutes before it's shown to the user. If the model cites anything outside that list, the app shows an honest "no specific statute applies — consult a lawyer" message instead of a fabricated law. This was a deliberate trade-off: full RAG (retrieval over the actual statute text) would be the more robust long-term fix, but the whitelist gets most of the safety benefit at a fraction of the engineering cost, appropriate for a hackathon timeline.
 - **Language mismatch is a real product bug, not just a UX nicety** — early on, the Lawyer-Ready Summary page inherited whatever language (Pidgin or English) the user picked at scan time. A document meant for a lawyer should never be in Pidgin. We fixed this by having the AI generate both an English and Pidgin explanation per clause at scan time, and hard-coding the summary page to always use the English version regardless of user preference.
 - **The model never gives direct commands** — the system prompt explicitly avoids phrasing like "do not sign this," instead stating the risk clearly and leaving the decision to the user, since Pocket Legal AI provides legal information, not legal advice.
 - **No fabricated urgency or scare tactics** — risk scoring is grounded strictly in clause severity (any Illegal clause caps the score at 40, multiple Risky clauses cap it at 60), not clause count, so a document with one serious violation is never scored as "safe" just because everything else is fine.
@@ -80,9 +80,9 @@ You will need an OpenRouter API key. Create a `.env` file (not committed to git)
 OPENROUTER_API_KEY=your_key_here
 ## Feasibility in the Nigerian context
 
-- Works on low-bandwidth connections — no heavy client libraries beyond Tailwind (CDN) and PDF.js
+- Works on lolow-bandwidthonnections — no heavy client libraries beyond Tailwind (CDN) and PDF.js
 - Supports Nigerian Pidgin explanations for users more comfortable outside formal English
-- Free-tier AI model keeps running costs at zero, which matters for a tool aimed at people who often can't afford legal fees in the first place
+- Free-tier AI model keeps running costs at zero, which matters for a tool aimed at people who often can't afford legegalees in the first place
 - No account or signup required — removes the biggest adoption barrier for a first-time user in a moment of urgency (e.g. about to sign a lease)
 
 ## What's next (beyond this hackathon)
